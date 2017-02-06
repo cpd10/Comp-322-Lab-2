@@ -13,29 +13,20 @@ void main(int argc, char* argv[])
 {
     pid_t cpid;
     int i;
-    for(i = 1; i < argc; i++)
-    {
-	cpid = fork();
-	
-	if(cpid > 0)
-	{
-		continue;
-	}
-    
-    	else if(cpid == 0)
-	{
-		printf("\tFilename: %s\tPID: %d\n", argv[i], getpid());
-		exit(0);		
-	}
-
-    	else
-    	{
-        	perror("Fork failed");
-        	exit(1);
-    	}
+    pid_t cpid, mypid;
+    pid_t pid = getpid();         /* get current processes PID */
+    printf("Parent pid: %d\n", pid);
+    cpid = fork();
+    if (cpid > 0) { /* Parent Process */
+	mypid = getpid();
+	printf("[%d] parent of [%d]\n", mypid, cpid);
+    }  else if (cpid == 0) { /* Child Process */
+	mypid = getpid();
+	printf("[%d] child\n", mypid);
+    } else {
+	perror("Fork failed");
+	exit(1);
     }
-    for(i = 1; i < argc; i++)
-	wait(NULL);
     printf("Done\n");
     exit(0);
 }
